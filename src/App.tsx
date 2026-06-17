@@ -76,19 +76,36 @@ export default function App() {
   });
 
   // 4. Primary Selected City (starts with London unless cached)
-  const [currentCity, setCurrentCity] = useState<CitySearchResult>(() => {
-    try {
-      const cachedActiveCity = localStorage.getItem('weather_active_city');
-      return cachedActiveCity ? JSON.parse(cachedActiveCity) : DEFAULT_CITY;
-    } catch {
-      return DEFAULT_CITY;
-    }
-  });
+  // const [currentCity, setCurrentCity] = useState<CitySearchResult>(() => {
+  //   try {
+  //     const cachedActiveCity = localStorage.getItem('weather_active_city');
+  //     return cachedActiveCity ? JSON.parse(cachedActiveCity) : DEFAULT_CITY;
+  //   } catch {
+  //     return DEFAULT_CITY;
+  //   }
+  // });
+
+  const [currentCity, setCurrentCity] = useState<CitySearchResult | null>(() => {
+  try {
+    const cachedActiveCity = localStorage.getItem('weather_active_city');
+    return cachedActiveCity ? JSON.parse(cachedActiveCity) : null;
+  } catch {
+    return null;
+  }
+});
 
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLocationLoading, setIsLocationLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const cachedActiveCity = localStorage.getItem('weather_active_city');
+
+    if (!cachedActiveCity) {
+      handleUseMyLocation();
+    }
+  }, []);
 
   // Apply dark mode on mount / preference shifts
   useEffect(() => {
@@ -118,6 +135,7 @@ export default function App() {
 
   // Fetch forecast upon current selected location changes
   useEffect(() => {
+     if (!currentCity) return;
     let active = true;
 
     const loadWeather = async () => {
@@ -171,7 +189,7 @@ export default function App() {
       },
       (err) => {
         console.error("Geolocation error callback:", err);
-        setError("Unable to obtain device coordinates. Please inspect dynamic privacy settings or search manually.");
+        setError("Location access was denied. Search for a city manually to start using Weather Intelligence.");
         setIsLocationLoading(false);
       },
       { timeout: 7000, enableHighAccuracy: true }
@@ -434,7 +452,7 @@ export default function App() {
               />
             ) : (
               <div className="rounded-3xl border border-dashed border-gray-250 dark:border-zinc-800 bg-gray-50/10 dark:bg-zinc-900/20 p-8 text-center italic text-sm text-gray-450 dark:text-zinc-550">
-                Search a city or use your location to open the weather dashboard.
+                Allow location access or search for a city to view weather forecasts and insights.
               </div>
             )}
 
