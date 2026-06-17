@@ -1,0 +1,10 @@
+{
+  "name": "Weather Intelligence",
+  "description": "A polished Weather Intelligence dashboard featuring live searches, unit toggling, city comparisons, and smart rule-based planning recommendations.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
