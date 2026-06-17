@@ -24,7 +24,7 @@ export default function ForecastCards({ data, tempUnit, windSpeedUnit }: Forecas
         </span>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {dailyForecasts.map((forecast, index) => {
           const condition = getWeatherCondition(forecast.weatherCode);
           const ConditionIcon = condition.icon;

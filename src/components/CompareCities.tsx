@@ -22,9 +22,15 @@ interface CompareCitiesProps {
   city1Data: WeatherData | null;
   tempUnit: TempUnit;
   windSpeedUnit: WindSpeedUnit;
+  onComparisonChange?: (hasComparison: boolean) => void;
 }
 
-export default function CompareCities({ city1Data, tempUnit, windSpeedUnit }: CompareCitiesProps) {
+export default function CompareCities({
+  city1Data,
+  tempUnit,
+  windSpeedUnit,
+  onComparisonChange
+}: CompareCitiesProps) {
   const [search2Query, setSearch2Query] = useState('');
   const [results2, setResults2] = useState<CitySearchResult[]>([]);
   const [isSearching2, setIsSearching2] = useState(false);
@@ -33,6 +39,9 @@ export default function CompareCities({ city1Data, tempUnit, windSpeedUnit }: Co
   const [error2, setError2] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  useEffect(() => {
+  onComparisonChange?.(!!city2Data);
+}, [city2Data, onComparisonChange]);
   // Auto-search for City 2 autocomplete
   useEffect(() => {
     if (search2Query.trim().length < 2) {
@@ -143,7 +152,7 @@ export default function CompareCities({ city1Data, tempUnit, windSpeedUnit }: Co
                 type="text"
                 value={search2Query}
                 onChange={(e) => setSearch2Query(e.target.value)}
-                placeholder="Search comparison City B..."
+                placeholder="Compare with another city..."
                 className="w-full pl-9 pr-6 py-3.5 rounded-2xl border border-gray-200 dark:border-zinc-805 bg-white dark:bg-zinc-900 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-zinc-150"
               />
 
@@ -280,8 +289,8 @@ export default function CompareCities({ city1Data, tempUnit, windSpeedUnit }: Co
             <span className="text-xs text-gray-400 dark:text-zinc-505 font-bold">Querying weather diagnostics...</span>
           </div>
         ) : (
-          <div className="h-28 flex flex-col items-center justify-center text-center p-4 border border-dashed border-gray-250 dark:border-zinc-800 rounded-2xl bg-gray-50/20 dark:bg-zinc-900/40">
-            <span className="text-xs text-gray-400 dark:text-zinc-500 font-bold">No comparison city linked.</span>
+          <div className="h-20 flex flex-col items-center justify-center text-center p-4 border border-dashed border-gray-250 dark:border-zinc-800 rounded-2xl bg-gray-50/20 dark:bg-zinc-900/40">
+            <span className="text-xs text-gray-400 dark:text-zinc-500 font-bold">Select a city to compare.</span>
             <p className="text-[11px] text-gray-450 dark:text-zinc-550 max-w-[320px] mt-1">
               Search and select a secondary city in the search box above to inspect side-by-side.
             </p>

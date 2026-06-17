@@ -13,6 +13,7 @@ import {
   Loader2,
   ShieldCheck,
   Sparkles,
+  Bell
 } from 'lucide-react';
 
 import { CitySearchResult, WeatherData, TempUnit, WindSpeedUnit, AppPreferences } from './types';
@@ -46,7 +47,7 @@ export default function App() {
     const cachedTemp = localStorage.getItem('weather_pref_temp') as TempUnit;
     const cachedWind = localStorage.getItem('weather_pref_wind') as WindSpeedUnit;
     const cachedTheme = localStorage.getItem('weather_pref_theme') as 'light' | 'dark';
-    
+
     return {
       tempUnit: cachedTemp === 'F' ? 'F' : 'C',
       windSpeedUnit: cachedWind === 'mph' ? 'mph' : 'kmh',
@@ -118,7 +119,7 @@ export default function App() {
   // Fetch forecast upon current selected location changes
   useEffect(() => {
     let active = true;
-    
+
     const loadWeather = async () => {
       setIsLoading(true);
       setError(null);
@@ -126,7 +127,7 @@ export default function App() {
         const result = await fetchWeatherForCity(currentCity);
         if (active) {
           setWeatherData(result);
-          
+
           // Store successful non-geolocation queries to recent searches history
           if (currentCity.name !== "My Location") {
             addToRecents(currentCity);
@@ -196,7 +197,7 @@ export default function App() {
     setFavorites((prev) => {
       const exists = prev.some((fav) => fav.id === city.id);
       let updated;
-      
+
       if (exists) {
         updated = prev.filter((fav) => fav.id !== city.id);
       } else {
@@ -206,7 +207,7 @@ export default function App() {
           updated = [...prev, city];
         }
       }
-      
+
       localStorage.setItem('weather_favorites', JSON.stringify(updated));
       return updated;
     });
@@ -243,7 +244,7 @@ export default function App() {
         secondary: isDark ? 'bg-purple-600/5' : 'bg-indigo-400/10'
       };
     }
-    
+
     if (code === 0 || code === 1) { // sunny
       return {
         primary: isDark ? 'bg-amber-500/8' : 'bg-amber-200/20',
@@ -283,26 +284,25 @@ export default function App() {
       <div className={`absolute bottom-[10%] right-[-150px] w-[500px] h-[500px] rounded-full ${glows.secondary} blur-[120px] pointer-events-none transition-all duration-700`} />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6">
-        
+
         <header className="relative overflow-hidden rounded-[2rem] border border-white/60 dark:border-cyan-300/15 bg-white/78 dark:bg-slate-950/78 shadow-glow-blue backdrop-blur-2xl" id="main-header">
           <div className="absolute inset-0 bg-gradient-to-br from-white/35 via-blue-500/5 to-indigo-600/10 dark:from-cyan-400/12 dark:via-indigo-500/10 dark:to-fuchsia-500/12 pointer-events-none" />
-          <div className="relative flex flex-col gap-6 p-5 sm:p-6 lg:p-7">
+          <div className="relative flex flex-col gap-4 p-5 sm:p-5 lg:p-6">
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
               <div className="flex items-start gap-4">
                 <span className="p-3 rounded-3xl bg-gradient-to-tr from-blue-500 via-indigo-500 to-violet-600 shadow-lg shadow-blue-500/25 text-white">
                   <CloudSun size={30} className="animate-pulse" />
                 </span>
                 <div className="flex flex-col">
-                  <div className="inline-flex w-fit items-center gap-2 rounded-full border border-blue-200/70 bg-blue-50/80 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-blue-700 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-300">
+                  {/* <div className="inline-flex w-fit items-center gap-2 rounded-full border border-blue-200/70 bg-blue-50/80 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-blue-700 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-300">
                     <Sparkles size={12} />
                     Open-Meteo Live Intelligence
-                  </div>
-                  <h1 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight font-display text-gray-950 dark:text-white">
+                  </div> */}
+                  <h1 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight font-display text-gray-950 dark:text-white">
                     Weather Intelligence
                   </h1>
                   <p className="mt-2 max-w-2xl text-sm sm:text-base font-medium leading-relaxed text-slate-600 dark:text-slate-200">
-                    A production-ready weather command center with forecasts, comfort scoring,
-                    favorites, comparison tools, and planning recommendations.
+                    Real-time forecasts, comfort insights, city comparisons, and intelligent weather planning.
                   </p>
                 </div>
               </div>
@@ -329,26 +329,34 @@ export default function App() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="rounded-2xl border border-white/70 dark:border-cyan-300/15 bg-white/70 dark:bg-cyan-300/10 p-4">
+              <div className="rounded-2xl border border-white/70 dark:border-violet-300/15 bg-white/70 dark:bg-violet-300/10 p-4">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  <Activity size={14} className="text-emerald-500" />
-                  Static SPA
+                  <Sparkles size={14} className="text-violet-500" />
+                  AI Insights
                 </div>
-                <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-white">No backend or secret keys</p>
+                <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-white">
+                  Personalized weather summaries and recommendations
+                </p>
               </div>
-              <div className="rounded-2xl border border-white/70 dark:border-blue-300/15 bg-white/70 dark:bg-blue-400/10 p-4">
+
+              <div className="rounded-2xl border border-white/70 dark:border-red-300/15 bg-white/70 dark:bg-red-300/10 p-4">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  <ShieldCheck size={14} className="text-blue-500" />
-                  Docker Ready
+                  <Bell size={14} className="text-red-500" />
+                  Weather Alerts
                 </div>
-                <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-white">Nginx serving with health check</p>
+                <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-white">
+                  Instant warnings for storms, heatwaves, and severe conditions
+                </p>
               </div>
+
               <div className="rounded-2xl border border-white/70 dark:border-amber-300/15 bg-white/70 dark:bg-amber-300/10 p-4">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   <CloudSun size={14} className="text-amber-500" />
                   Smart Planning
                 </div>
-                <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-white">Forecasts, alerts, and city compare</p>
+                <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-white">
+                  Forecasts, alerts, and city comparison tools
+                </p>
               </div>
             </div>
           </div>
@@ -361,8 +369,8 @@ export default function App() {
             <div className="flex-1">
               <strong>Meteorological Diagnostic Alert:</strong> {error}
             </div>
-            <button 
-              onClick={() => setError(null)} 
+            <button
+              onClick={() => setError(null)}
               className="text-xs font-bold hover:underline cursor-pointer uppercase py-1 px-2 rounded hover:bg-rose-100/40"
             >
               Dismiss
@@ -403,7 +411,12 @@ export default function App() {
 
         {/* Main dashboard: live weather beside planning intelligence */}
         <section className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-          <div className="xl:col-span-5 flex flex-col gap-6">
+          <div className="xl:col-span-6 flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Weather Overview
+              </h2>
+            </div>
             {isLoading ? (
               <div className="rounded-3xl border border-gray-150 dark:border-zinc-850 bg-white/75 dark:bg-slate-950/64 p-12 flex flex-col items-center justify-center text-center gap-3 backdrop-blur-xl">
                 <Loader2 size={36} className="animate-spin text-blue-500" />
@@ -412,10 +425,10 @@ export default function App() {
                 </span>
               </div>
             ) : weatherData ? (
-              <CurrentWeather 
-                data={weatherData} 
-                tempUnit={preferences.tempUnit} 
-                windSpeedUnit={preferences.windSpeedUnit} 
+              <CurrentWeather
+                data={weatherData}
+                tempUnit={preferences.tempUnit}
+                windSpeedUnit={preferences.windSpeedUnit}
               />
             ) : (
               <div className="rounded-3xl border border-dashed border-gray-250 dark:border-zinc-800 bg-gray-50/10 dark:bg-zinc-900/20 p-8 text-center italic text-sm text-gray-450 dark:text-zinc-550">
@@ -433,16 +446,19 @@ export default function App() {
             )}
           </div>
 
-          <div className="xl:col-span-7 flex flex-col gap-6" id="dashboard-analytics">
+          <div className="xl:col-span-6 flex flex-col gap-6" id="dashboard-analytics">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Planning Intelligence
+            </h2>
             {!isLoading && weatherData && (
               <Recommendations data={weatherData} />
             )}
 
+            
             {!isLoading && weatherData && (
-              <CompareCities
-                city1Data={weatherData}
+              <WeatherCharts
+                data={weatherData}
                 tempUnit={preferences.tempUnit}
-                windSpeedUnit={preferences.windSpeedUnit}
               />
             )}
           </div>
@@ -450,32 +466,65 @@ export default function App() {
 
         {/* Bottom analytics row: no empty side gutters */}
         {!isLoading && weatherData && (
-          <section className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-            <div className="xl:col-span-7">
-              <WeatherCharts
-                data={weatherData}
-                tempUnit={preferences.tempUnit}
-              />
-            </div>
-
-            <div className="xl:col-span-5 p-5 sm:p-6 rounded-3xl border border-gray-150 dark:border-zinc-850 bg-white/75 dark:bg-slate-950/64 shadow-xs backdrop-blur-xl">
-              <ForecastCards
+          <div className="xl:col-span-7 flex flex-col gap-6">
+                <ForecastCards
                 data={weatherData}
                 tempUnit={preferences.tempUnit}
                 windSpeedUnit={preferences.windSpeedUnit}
               />
-            </div>
-          </section>
+              <CompareCities
+                city1Data={weatherData}
+                tempUnit={preferences.tempUnit}
+                windSpeedUnit={preferences.windSpeedUnit}
+              />
+           
+          </div>
         )}
         {/* SYSTEM RECOVERY INFO PANEL FOOTER */}
-        <footer className="mt-8 text-center flex flex-col items-center justify-center p-6 border-t border-gray-150 dark:border-zinc-850 gap-2">
-          <div className="flex items-center gap-1 text-xs font-semibold text-gray-450 dark:text-zinc-500">
-            <Info size={12} className="text-blue-500 shrink-0" />
-            <span>This frontend is powered exclusively by free public datasets from <strong>Open-Meteo API</strong>.</span>
+        <footer className="mt-8 border-t border-gray-150 dark:border-zinc-850 pt-6">
+          {/* Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+            <div>
+              <p className="text-xl font-black text-slate-900 dark:text-white">
+                24h
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Hourly Forecast
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xl font-black text-slate-900 dark:text-white">
+                7 Days
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Extended Outlook
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xl font-black text-slate-900 dark:text-white">
+                Smart
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Weather Intelligence
+              </p>
+            </div>
           </div>
-          <span className="text-[10px] font-mono text-gray-400 dark:text-zinc-600">
-            Weather Intelligence is frontend-only, Docker-ready, and does not require API keys.
-          </span>
+
+          {/* Description */}
+          <div className="mt-6 flex flex-col items-center text-center gap-2">
+            <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 dark:text-zinc-400">
+              <Info size={12} className="text-emerald-500 shrink-0" />
+              <span>
+                Compare cities, monitor conditions, and discover the best times for outdoor activities.
+              </span>
+            </div>
+
+            <span className="text-[10px] font-mono text-gray-400 dark:text-zinc-600">
+              Data-driven weather insights for everyday planning
+            </span>
+          </div>
         </footer>
 
       </div>

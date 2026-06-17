@@ -86,11 +86,11 @@ export default function Recommendations({ data }: RecommendationsProps) {
         </div>
 
         {/* Short Text status description */}
-        <div className="w-full">
-          <div className={`px-3 py-1.5 rounded-xl text-xs font-bold ${scheme.bg} ${scheme.text} truncate`}>
-            {activityText}
-          </div>
-        </div>
+        <div
+  className={`px-3 py-1.5 rounded-xl text-xs font-bold ${scheme.bg} ${scheme.text} text-center`}
+>
+  {activityText}
+</div>
       </div>
 
       {/* 2. Planning Recommendations Checklist */}
