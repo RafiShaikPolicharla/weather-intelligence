@@ -8,7 +8,8 @@ import {
   Check, 
   Thermometer, 
   Clock, 
-  Share2 
+  Share2, 
+  Radio
 } from 'lucide-react';
 import { WeatherData, TempUnit, WindSpeedUnit } from '../types';
 import { getWeatherCondition } from '../utils/weatherCode';
@@ -70,6 +71,7 @@ export default function CurrentWeather({ data, tempUnit, windSpeedUnit }: Curren
       <div className="flex flex-col justify-between z-10 relative flex-grow min-w-0">
         <div>
           <div className="flex items-center gap-2">
+              <Radio color="red"  size={14}/>
             <span className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-650 dark:text-zinc-300 border border-zinc-200/40 dark:border-zinc-700/50">
               Live Conditions
             </span>
@@ -195,7 +197,7 @@ export default function CurrentWeather({ data, tempUnit, windSpeedUnit }: Curren
             </>
           ) : (
             <>
-              <Share2 size={14} />
+              <Copy size={14}/>
               Copy Intelligence Report
             </>
           )}

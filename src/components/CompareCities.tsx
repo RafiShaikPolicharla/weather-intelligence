@@ -113,12 +113,12 @@ export default function CompareCities({
         {/* City 1 (Presumed from search) */}
         <div className="p-4 rounded-2xl bg-gray-50/50 dark:bg-zinc-850/40 border border-gray-100 dark:border-zinc-850 flex items-center justify-between">
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase">Primary City (City A)</span>
+            <span className="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase">Primary City </span>
             <span className="text-sm font-extrabold text-gray-900 dark:text-zinc-150 mt-1">
               {city1Data ? city1Data.city.name : 'No City Selected'}
             </span>
           </div>
-          <span className="text-xs font-black text-blue-500 bg-blue-500/10 dark:bg-blue-900/20 px-2 py-1 rounded">Active</span>
+          <span className="text-xs font-black dark:text-blue text-blue-500 bg-blue-500/10 dark:bg-white px-2 py-1 rounded">Active</span>
         </div>
 
         {/* City 2 (Search and Load) */}

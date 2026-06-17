@@ -19,9 +19,9 @@ export default function ForecastCards({ data, tempUnit, windSpeedUnit }: Forecas
         <h3 className="text-sm font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider">
           7-Day Forecast
         </h3>
-        <span className="text-xs text-gray-400 dark:text-zinc-550 italic">
+        {/* <span className="text-xs text-gray-400 dark:text-zinc-550 italic">
           Localized Open-Meteo predictions
-        </span>
+        </span> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -71,7 +71,7 @@ export default function ForecastCards({ data, tempUnit, windSpeedUnit }: Forecas
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-gray-100 dark:border-cyan-300/10">
+              <div className="grid grid-cols-4 gap-2 pt-3 border-t border-gray-100 dark:border-cyan-300/10">
                 <div className="min-w-0 rounded-xl bg-white/55 dark:bg-white/5 border border-gray-100 dark:border-white/10 px-2.5 py-2">
                   <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-400">
                     <ArrowDown size={12} className="text-blue-500 shrink-0" />

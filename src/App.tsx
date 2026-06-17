@@ -421,7 +421,9 @@ export default function App() {
               <div className="rounded-3xl border border-gray-150 dark:border-zinc-850 bg-white/75 dark:bg-slate-950/64 p-12 flex flex-col items-center justify-center text-center gap-3 backdrop-blur-xl">
                 <Loader2 size={36} className="animate-spin text-blue-500" />
                 <span className="text-xs font-extrabold text-gray-400 dark:text-zinc-500 animate-pulse uppercase tracking-wider">
-                  Fetching latest Open-Meteo forecast...
+                  Fetching latest 
+                  {/* Open-Meteo  */}
+                  forecast...
                 </span>
               </div>
             ) : weatherData ? (
