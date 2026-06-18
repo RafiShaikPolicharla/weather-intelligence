@@ -23,19 +23,19 @@ This app does **not** need API keys or sensitive environment variables.
 
 - `.env.example` is included only as documentation for evaluators.
 - Do not add `GEMINI_API_KEY`, Firebase config, private tokens, passwords, or client data.
-- If a future non-secret public build value is needed, use Vite’s `VITE_` prefix, for example `VITE_APP_NAME`.
+- If a future non-secret public build value is needed, use Vite's `VITE_` prefix, for example `VITE_APP_NAME`.
 
 ## API Visibility And Security
 
 Open-Meteo API URLs are public and will be visible in browser DevTools, network logs, and compiled frontend JavaScript. That is normal for a frontend-only app.
 
-What is secure here:
+**What is secure here:**
 
 - No private API keys are used.
 - No secrets are shipped in `.env`, source code, Docker image, or browser bundle.
 - Open-Meteo is intentionally called as a public weather-data service.
 
-What cannot be hidden in a frontend-only app:
+**What cannot be hidden in a frontend-only app:**
 
 - Public endpoint URLs.
 - Request parameters such as latitude, longitude, city name, and forecast fields.
@@ -72,48 +72,60 @@ Run TypeScript validation:
 npm run lint
 ```
 
-## Docker Setup
+## Dockerization
 
-The project includes:
+The project is fully containerized using a multi-stage Docker build, served in production by nginx.
 
-- `Dockerfile`: multi-stage production build.
-- `.dockerignore`: excludes local/cache files from the image.
-- `nginx.conf`: serves the React static build and supports SPA routing.
+### Files Included
 
-Build the image from Ubuntu WSL:
+| File | Purpose |
+|---|---|
+| `Dockerfile` | Multi-stage build: compiles the app, then serves it via nginx |
+| `.dockerignore` | Excludes local/cache files (`node_modules`, `.git`, `.env`, etc.) from the build context |
+| `nginx.conf` | Configures the production web server and SPA routing |
+
+### Step 1 — Build the Image
+
+Run from the project root in Ubuntu WSL:
 
 ```bash
 docker build -t weather-intelligence .
 ```
 
-Run the container:
+### Step 2 — Run the Container
 
 ```bash
 docker run --rm -p 8080:8080 weather-intelligence
 ```
 
-Open:
+### Step 3 — Verify It's Running
+
+Open in a browser:
 
 ```text
 http://localhost:8080
 ```
 
-Health check:
+Check the health endpoint:
 
 ```text
 http://localhost:8080/health
 ```
 
-## How Docker Works Here
+It should return `ok`.
 
-The `Dockerfile` has two stages:
+### How the Build Works
 
-1. **Build stage**: uses `node:20-alpine`, installs dependencies with `npm ci`, and runs `npm run build`.
-2. **Runtime stage**: uses `nginx:1.27-alpine` and copies the generated `dist/` files into nginx’s web root.
+The `Dockerfile` uses two stages so the final image only contains what's needed to *serve* the app, not build it:
 
-This keeps the final image smaller and avoids shipping Node.js build tooling in the runtime container.
+1. **Build stage** (`node:20-alpine`)
+   - Installs dependencies with `npm ci` for a clean, reproducible install.
+   - Runs `npm run build` to produce the static `dist/` output.
+2. **Runtime stage** (`nginx:1.27-alpine`)
+   - Copies only `nginx.conf` and the compiled `dist/` folder from the build stage.
+   - Node.js, source files, and build tooling are discarded, keeping the final image small and free of unnecessary dependencies.
 
-## How nginx Works Here
+### Nginx Configuration
 
 `nginx.conf` listens on container port `8080` and serves files from:
 
@@ -121,33 +133,21 @@ This keeps the final image smaller and avoids shipping Node.js build tooling in 
 /usr/share/nginx/html
 ```
 
-Important routes:
+Key routes:
 
-- `/`: serves the React app.
-- `/assets/`: serves hashed static assets with long-term cache headers.
-- `/health`: returns `ok` for simple Docker/container validation.
-- SPA fallback: `try_files $uri $uri/ /index.html;` keeps browser refresh working on frontend routes.
+- `/` — serves the React app, with SPA fallback (`try_files $uri $uri/ /index.html;`) so browser refresh works correctly on frontend routes.
+- `/assets/` — serves hashed static assets with long-term, immutable cache headers.
+- `/health` — returns `ok` for simple container/load-balancer health checks.
 
 ## Testing Checklist
 
 - Search `Chennai` and confirm current weather + forecast loads.
 - Search `London` and confirm dashboard updates.
 - Search `asdfghcity` and confirm invalid-city handling.
-- Use “My Location” and confirm permission handling.
+- Use "My Location" and confirm permission handling.
 - Toggle Celsius/Fahrenheit and km/h/mph.
 - Toggle light/dark mode.
 - Add and remove a favorite city.
 - Confirm recent searches persist after refresh.
 - Compare two cities side-by-side.
 - Run Docker container and verify `/health` returns `ok`.
-
-## Submission Evidence To Capture
-
-- WSL terminal showing `pwd`, `node -v`, and `npm -v`.
-- WSL terminal showing `npm install`, `npm run dev`, and `npm run build`.
-- Browser screenshot of local app.
-- WSL terminal showing `docker build -t weather-intelligence .`.
-- WSL terminal showing `docker run --rm -p 8080:8080 weather-intelligence`.
-- Browser screenshot of `http://localhost:8080`.
-- Browser screenshot of `http://localhost:8080/health`.
-- Screenshots for Chennai, London, invalid city, dark mode, and comparison mode.
